@@ -12,18 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->string('id')->primary();
             $table->string('nama_pemesan');
             $table->string('nomor_wa');
             $table->string('email');
-            $table->timestamps();
             $table->string('nama_produk');
             $table->integer('jumlah');
-            $table->enum('status', [
-                'baru',
-                'diproses',
-                'selesai'
-            ])->default('baru');
+
+            $table->enum('status', ['baru', 'diproses', 'selesai'])
+                ->default('baru');
 
             $table->timestamps();
         });
