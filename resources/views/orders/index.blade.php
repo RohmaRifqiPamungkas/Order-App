@@ -5,109 +5,116 @@
 @section('content')
 
 {{-- Notifikasi --}}
-<div id="alert-box" class="alert d-none" role="alert"></div>
+<div id="alert-box" class="alert d-none shadow-sm rounded-3" role="alert"></div>
 
 {{-- Header --}}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold mb-0">Daftar Pesanan</h4>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalOrder" onclick="resetForm()">
-        <i class="bi bi-plus-lg me-1"></i> Tambah Pesanan
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h3 class="fw-bold mb-0 text-dark">Daftar Pesanan</h3>
+        <p class="text-muted mb-0 small">Kelola semua data pesanan pelanggan Anda di sini.</p>
+    </div>
+    <button class="btn btn-primary shadow-sm rounded-3 px-3 py-2" data-bs-toggle="modal" data-bs-target="#modalOrder" onclick="resetForm()">
+        <i class="bi bi-plus-circle me-2"></i>Tambah Pesanan
     </button>
 </div>
 
-{{-- Tabel --}}
-<div class="card shadow-sm">
+{{-- Tabel Container --}}
+<div class="card border-0 shadow-sm rounded-3">
     <div class="card-body p-0">
-        <table class="table table-hover table-striped mb-0" id="tabel-order">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Nama Pemesan</th>
-                    <th>No. WhatsApp</th>
-                    <th>Email</th>
-                    <th>Produk</th>
-                    <th>Jumlah</th>
-                    <th>Status</th>
-                    <th>Tanggal</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-order">
-                @foreach ($orders as $i => $order)
-                <tr id="row-{{ $order->id }}">
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $order->nama_pemesan }}</td>
-                    <td>{{ $order->nomor_wa }}</td>
-                    <td>{{ $order->email }}</td>
-                    <td>{{ $order->nama_produk }}</td>
-                    <td>{{ $order->jumlah }}</td>
-                    <td>
-                        <span class="badge
-                            {{ $order->status === 'baru' ? 'bg-secondary' : ($order->status === 'diproses' ? 'bg-warning text-dark' : 'bg-success') }}">
-                            {{ ucfirst($order->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning me-1" onclick="editOrder('{{ $order->id }}')">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteOrder('{{ $order->id }}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="tabel-order">
+                <thead class="table-light text-secondary">
+                    <tr>
+                        <th class="ps-4">#</th>
+                        <th>Nama Pemesan</th>
+                        <th>No. WhatsApp</th>
+                        <th>Email</th>
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th class="text-end pe-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-order" class="border-top-0">
+                    @foreach ($orders as $i => $order)
+                    <tr id="row-{{ $order->id }}">
+                        <td class="ps-4 text-muted">{{ $i + 1 }}</td>
+                        <td class="fw-semibold">{{ $order->nama_pemesan }}</td>
+                        <td>{{ $order->nomor_wa }}</td>
+                        <td>{{ $order->email }}</td>
+                        <td>{{ $order->nama_produk }}</td>
+                        <td>{{ $order->jumlah }}</td>
+                        <td>
+                            <span class="badge rounded-pill fw-normal px-3 py-2 
+                                {{ $order->status === 'baru' ? 'bg-secondary' : ($order->status === 'diproses' ? 'bg-warning text-dark' : 'bg-success') }}">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </td>
+                        <td class="text-muted small">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-light text-primary me-1 rounded-3" onclick="editOrder('{{ $order->id }}')" title="Edit">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-sm btn-light text-danger rounded-3" onclick="deleteOrder('{{ $order->id }}')" title="Hapus">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 {{-- Modal Form --}}
-<div class="modal fade" id="modalOrder" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Tambah Pesanan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade" id="modalOrder" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                <h5 class="modal-title fw-bold" id="modal-title">Tambah Pesanan</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body px-4 pt-3 pb-4">
                 <form id="form-order">
                     <input type="hidden" id="order-id">
 
-                    <div class="mb-3">
-                        <label class="form-label">Nama Pemesan</label>
-                        <input type="text" class="form-control" id="nama_pemesan" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nomor WhatsApp</label>
-                        <input type="text" class="form-control" id="nomor_wa" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nama Produk</label>
-                        <input type="text" class="form-control" id="nama_produk" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Jumlah</label>
-                        <input type="number" class="form-control" id="jumlah" min="1" required>
-                    </div>
-                    <div class="mb-3" id="status-group" style="display:none">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="status">
-                            <option value="baru">Baru</option>
-                            <option value="diproses">Diproses</option>
-                            <option value="selesai">Selesai</option>
-                        </select>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-secondary small">Nama Pemesan</label>
+                            <input type="text" class="form-control rounded-3 shadow-none" id="nama_pemesan" placeholder="Masukkan nama..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-secondary small">Nomor WhatsApp</label>
+                            <input type="text" class="form-control rounded-3 shadow-none" id="nomor_wa" placeholder="Contoh: 08123456789" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-secondary small">Email</label>
+                            <input type="email" class="form-control rounded-3 shadow-none" id="email" placeholder="email@contoh.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-secondary small">Nama Produk</label>
+                            <input type="text" class="form-control rounded-3 shadow-none" id="nama_produk" placeholder="Nama produk..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium text-secondary small">Jumlah</label>
+                            <input type="number" class="form-control rounded-3 shadow-none" id="jumlah" min="1" value="1" required>
+                        </div>
+                        <div class="col-md-6" id="status-group" style="display:none">
+                            <label class="form-label fw-medium text-secondary small">Status</label>
+                            <select class="form-select rounded-3 shadow-none" id="status">
+                                <option value="baru">Baru</option>
+                                <option value="diproses">Diproses</option>
+                                <option value="selesai">Selesai</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="btn-save" onclick="saveOrder()">Simpan</button>
+            <div class="modal-footer border-top-0 px-4 pb-4 pt-0">
+                <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary rounded-3 px-4 shadow-sm" id="btn-save" onclick="saveOrder()">Simpan Pesanan</button>
             </div>
         </div>
     </div>
@@ -122,9 +129,12 @@
 
     function showAlert(message, type = 'success') {
         const box = document.getElementById('alert-box');
-        box.className = `alert alert-${type} alert-dismissible fade show`;
-        box.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-        setTimeout(() => box.classList.add('d-none'), 4000);
+        box.className = `alert alert-${type} alert-dismissible fade show shadow-sm rounded-3`;
+        box.innerHTML = `<strong>${type === 'success' ? 'Berhasil!' : 'Perhatian!'}</strong> ${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+        setTimeout(() => {
+            box.classList.remove('show');
+            setTimeout(() => box.classList.add('d-none'), 150);
+        }, 4000);
     }
 
     function resetForm() {
@@ -148,20 +158,26 @@
             hour: '2-digit',
             minute: '2-digit'
         });
-        return `<tr id="row-${o.id}">
-        <td>${index}</td>
-        <td>${o.nama_pemesan}</td>
-        <td>${o.nomor_wa}</td>
-        <td>${o.email}</td>
-        <td>${o.nama_produk}</td>
-        <td>${o.jumlah}</td>
-        <td><span class="badge ${badgeClass(o.status)}">${o.status.charAt(0).toUpperCase() + o.status.slice(1)}</span></td>
-        <td>${date}</td>
-        <td>
-            <button class="btn btn-sm btn-warning me-1" onclick="editOrder('${o.id}')"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="deleteOrder('${o.id}')"><i class="bi bi-trash"></i></button>
-        </td>
-    </tr>`;
+
+        return `
+        <tr id="row-${o.id}">
+            <td class="ps-4 text-muted">${index}</td>
+            <td class="fw-semibold">${o.nama_pemesan}</td>
+            <td>${o.nomor_wa}</td>
+            <td>${o.email}</td>
+            <td>${o.nama_produk}</td>
+            <td>${o.jumlah}</td>
+            <td><span class="badge rounded-pill fw-normal px-3 py-2 ${badgeClass(o.status)}">${o.status.charAt(0).toUpperCase() + o.status.slice(1)}</span></td>
+            <td class="text-muted small">${date}</td>
+            <td class="text-end pe-4">
+                <button class="btn btn-sm btn-light text-primary me-1 rounded-3" onclick="editOrder('${o.id}')" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-light text-danger rounded-3" onclick="deleteOrder('${o.id}')" title="Hapus">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </td>
+        </tr>`;
     }
 
     function reloadTable() {
@@ -190,6 +206,12 @@
 
         const method = id ? 'PUT' : 'POST';
         const url = id ? `${BASE}/${id}` : BASE;
+        const btnSave = document.getElementById('btn-save');
+
+        // Loading state
+        const originalText = btnSave.innerHTML;
+        btnSave.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menyimpan...';
+        btnSave.disabled = true;
 
         fetch(url, {
                 method,
@@ -210,7 +232,11 @@
                     showAlert(JSON.stringify(res.errors), 'danger');
                 }
             })
-            .catch(() => showAlert('Terjadi kesalahan.', 'danger'));
+            .catch(() => showAlert('Terjadi kesalahan sistem.', 'danger'))
+            .finally(() => {
+                btnSave.innerHTML = originalText;
+                btnSave.disabled = false;
+            });
     }
 
     function editOrder(id) {
@@ -236,7 +262,7 @@
     }
 
     function deleteOrder(id) {
-        if (!confirm('Yakin hapus pesanan ini?')) return;
+        if (!confirm('Apakah Anda yakin ingin menghapus pesanan ini? Data yang dihapus tidak dapat dikembalikan.')) return;
 
         fetch(`${BASE}/${id}`, {
                 method: 'DELETE',
@@ -250,6 +276,7 @@
                 if (res.success) {
                     document.getElementById(`row-${id}`).remove();
                     showAlert(res.message);
+                    // Re-index tabel secara visual setelah hapus bisa dipanggil reloadTable() jika diperlukan
                 }
             });
     }
