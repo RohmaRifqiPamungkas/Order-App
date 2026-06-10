@@ -262,22 +262,40 @@
     }
 
     function deleteOrder(id) {
-        if (!confirm('Apakah Anda yakin ingin menghapus pesanan ini? Data yang dihapus tidak dapat dikembalikan.')) return;
+        Swal.fire({
+            title: 'Hapus Pesanan?',
+            text: 'Data yang dihapus tidak dapat dikembalikan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (!result.isConfirmed) return;
 
-        fetch(`${BASE}/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-            })
-            .then(r => r.json())
-            .then(res => {
-                if (res.success) {
-                    document.getElementById(`row-${id}`).remove();
-                    showAlert(res.message);
-                }
-            });
+            fetch(`${BASE}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) {
+                        document.getElementById(`row-${id}`).remove();
+                        Swal.fire({
+                            title: 'Terhapus!',
+                            text: res.message,
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                });
+        });
     }
 </script>
 @endsection
