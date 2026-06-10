@@ -15,7 +15,7 @@
     <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container">
             <span class="navbar-brand fw-bold">
-                <i class="bi bi-bag-check-fill me-2"></i>Order App — Admin
+                <i class="bi bi-bag-check-fill me-2"></i>Order App - Admin
             </span>
         </div>
     </nav>
