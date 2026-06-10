@@ -1,58 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Order App — Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web manajemen pemesanan produk berbasis Laravel. Menyediakan REST API untuk CRUD pesanan dan halaman admin untuk mengelola data pesanan secara real-time tanpa reload halaman.
 
-## About Laravel
+## Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- CRUD pesanan via REST API (`/api/orders`)
+- Halaman admin (`/admin/orders`) dengan tabel pesanan
+- UUID v7 sebagai primary key
+- AJAX tanpa reload halaman menggunakan Fetch API
+- Notifikasi SweetAlert2 untuk konfirmasi dan feedback aksi
+- Tampilan Bootstrap 5
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel** 13.15 (PHP 8.3)
+- **Database** SQLite (default) / MySQL
+- **Frontend** Bootstrap 5, SweetAlert2
 
-## Learning Laravel
+## Struktur Tabel `orders`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | UUID | Primary key (auto-generate) |
+| `nama_pemesan` | string | Nama pelanggan |
+| `nomor_wa` | string | Nomor WhatsApp |
+| `email` | string | Email pelanggan |
+| `nama_produk` | string | Nama produk yang dipesan |
+| `jumlah` | integer | Jumlah produk |
+| `status` | enum | `baru` / `diproses` / `selesai` |
+| `created_at` | timestamp | Otomatis |
+| `updated_at` | timestamp | Otomatis |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalasi
 
 ```bash
-composer require laravel/boost --dev
+# Clone & masuk ke direktori
+git clone <repo-url>
+cd order-app
 
-php artisan boost:install
+# Install dependensi
+composer install
+
+# Salin konfigurasi
+cp .env.example .env
+php artisan key:generate
+
+# Jalankan migrasi
+php artisan migrate
+
+# (Opsional) Isi data dummy
+php artisan db:seed
+
+# Jalankan server
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Akses aplikasi di `http://localhost:8000`.
 
-## Contributing
+## API Endpoints
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/orders` | Ambil semua pesanan |
+| POST | `/api/orders` | Buat pesanan baru |
+| GET | `/api/orders/{id}` | Detail pesanan |
+| PUT | `/api/orders/{id}` | Update pesanan |
+| DELETE | `/api/orders/{id}` | Hapus pesanan |
 
-## Code of Conduct
+### Contoh POST `/api/orders`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```json
+{
+  "nama_pemesan": "Budi Santoso",
+  "nomor_wa": "08123456789",
+  "email": "budi@example.com",
+  "nama_produk": "Kopi Arabica Premium 250gr",
+  "jumlah": 2
+}
+```
 
-## Security Vulnerabilities
+### Contoh Response
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```json
+{
+  "success": true,
+  "message": "Pesanan berhasil dibuat",
+  "order": {
+    "id": "019eb0bb-f4c1-7120-b419-6bcbff57f32e",
+    "nama_pemesan": "Budi Santoso",
+    "status": "baru",
+    ...
+  }
+}
+```
 
-## License
+## Halaman Admin
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Akses di `http://localhost:8000/admin/orders`
+
+- Tambah, edit, dan hapus pesanan langsung dari tabel
+- Perubahan status pesanan (baru → diproses → selesai)
+- Semua aksi menggunakan AJAX tanpa reload
+
+## Integrasi WordPress
+
+API ini dirancang untuk menerima POST dari form pemesanan di WordPress. Pastikan CORS sudah dikonfigurasi dan WordPress mengirim request ke `http://localhost:8000/api/orders`.
+
+## Lisensi
+
+MIT
