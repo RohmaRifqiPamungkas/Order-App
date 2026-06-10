@@ -276,7 +276,6 @@
                 if (res.success) {
                     document.getElementById(`row-${id}`).remove();
                     showAlert(res.message);
-                    // Re-index tabel secara visual setelah hapus bisa dipanggil reloadTable() jika diperlukan
                 }
             });
     }
