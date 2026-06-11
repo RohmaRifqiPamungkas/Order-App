@@ -2,6 +2,11 @@
 
 Aplikasi web manajemen pemesanan produk berbasis Laravel. Menyediakan REST API untuk CRUD pesanan dan halaman admin untuk mengelola data pesanan secara real-time tanpa reload halaman.
 
+<img width="2880" height="1459" alt="image" src="https://github.com/user-attachments/assets/f92d9eab-ec38-43ba-b4f9-8b919e600e49" />
+<img width="2880" height="1454" alt="image" src="https://github.com/user-attachments/assets/cbe6b378-1a53-4588-8c7e-3dcdf87098d1" />
+<img width="2880" height="1452" alt="image" src="https://github.com/user-attachments/assets/f20484a1-1c63-4d16-ba98-9e80f32fefdd" />
+
+
 ## Fitur
 
 - CRUD pesanan via REST API (`/api/orders`)
