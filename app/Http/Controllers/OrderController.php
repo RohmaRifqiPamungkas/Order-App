@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -42,7 +43,16 @@ class OrderController extends Controller
             'jumlah'       => 'required|integer|min:1',
         ]);
 
-        $order = Order::create($validated);
+        try {
+            $order = Order::create($validated);
+        } catch (\Exception $e) {
+            Log::error('Gagal membuat pesanan: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat pesanan. Silakan coba lagi.',
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,
@@ -88,7 +98,16 @@ class OrderController extends Controller
             'status'       => 'sometimes|in:baru,diproses,selesai',
         ]);
 
-        $order->update($validated);
+        try {
+            $order->update($validated);
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui pesanan: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui pesanan. Silakan coba lagi.',
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,
